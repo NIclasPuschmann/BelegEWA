@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Kontaktformular</title>
+    </head>
+    <body>
+        <h1>Kontaktformular</h1>
+        <form action="https://iws107.informatik.htw-dresden.de/ewa/G16/">
+            <label for="firstname">Vorname</label>
+            <input id="firstname" type="text" name="first_name" pattern="[A-zÄÖÜäöüß]{2,}" placeholder="Max" required=""><br><br>
+            <label for="surname">Nachname</label>
+            <input id="surname" type="text" name="last_name" pattern="[A-zÄÖÜäöüß]{2,}" placeholder="Muster" required=""><br><br>
+            <label for="email">E-Mail</label>
+            <input id="email" nametype="email" size="30" placeholder="max.muster@gmail.com" required=""><br><br>
+            <label for="street">Straße:</label>
+            <input type="text" id="street" name="street" maxlength="50" size="50" placeholder="Friedrich-List-Platz 2"><br><br>
+            <label for="city">Ort:</label>
+            <input type="text" id="city" name="city" maxlength="50" size="50" placeholder="Dresden"><br><br>
+            <label for="zipcode">PLZ:</label>
+            <input type="text" id="zipcode" name="zipcode" pattern="[0-9]{5}" placeholder="01069"><br><br>
+            <label for="customerURL">URL:</label>
+            <input type="url" id="customerURL" name="customerURL" placeholder="https://www.htw-dresden.de" size="50"><br><br>
+            <label for="age">Alter:</label>
+            <input type="number" id="age" min="3" max="120" name="age" placeholder="23"><br><br>
+            <label for="interest">Interesse an weiteren Produkten (0 - kein Interesse | 10 - alles):</label>
+            <input type="range" id="interest" name="interest" min="0" max="10" value="5"><br><br>
+            <label for="request">Anfrage:</label><br>
+            <textarea id="request" rows="10" cols="100" placeholder="Bitte geben Sie hier Ihre Anfrage an uns ein!" spellcheck="true" name="request"></textarea><br>
+            <input type="submit" value="Senden">
+        </form>
+    </body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+	</script>
+	<script src="https://js.stripe.com/v3/"></script>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>G16_Books - Startseite</title>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-md navbar-light bg-light">
+		<a class="navbar-brand" href="#">G16_BOOKS</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="#">Startseite<span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="./G16-Lagerverwaltung">Lagerverwaltung</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="./Datenadm">Großhändler Shop</a>
+				</li>
+			</ul>
+			<!-- <form class="form-inline my-2 my-lg-0">
+			  <input class="form-control mr-sm-2" type="text" v-model="search" placeholder="Suche" v-model="search" aria-label="Suche">
+			  <button class="btn btn-outline-success my-2 my-sm-0" >Suche</button>
+			</form> -->
+		</div>
+		</div>
+	</nav>
+
+	</div>
+	<div id="app">
+
+		<div id="cart_overlay">
+
+			<div id="cart_area">
+				<button type="button" class="close" aria-label="Close" onclick="cart_off()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h1>Dein Warenkorb</h1>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item" v-for="(product, index) in products" v-if="product.InKorb">
+						Produkt: "{{ product.Produktitel }}"
+						Anzahl im Warenkorb:
+						<span class="badge badge-primary badge-pill">{{ product.AnzWarenkorb }}</span>
+						Preis:
+						<span class="badge badge-primary badge-pill">{{ product.PreisNetto}}€</span>
+					</li>
+				</ul>
+				<p v-if="Summe != 0"> Summe: {{Summe}}€</p>
+				<button id="checkout-button" v-if="Summe != 0">Zur Kasse gehen</button>
+
+			</div>
+
+		</div>
+
+		<input id="search_bar" class=" mr-sm-2" type="text" placeholder="Suche" v-model="search" aria-label="Suche">
+		<button class="btn btn-outline-success ml-3" onclick="cart_on()"
+		id="cart_but">Warenkorb </button>
+		<br>
+		<ul class="list-group list-group-flush">
+			<li class="list-group-item" v-for="(product, index) in filteredBooks">
+				Produkt: "{{ product.Produktitel }}" ,
+				Auf Lager:
+				<span class="badge badge-primary badge-pill">{{ product.Lagerbestand }}</span>
+
+				Anzahl
+				<span style="color:blue" v-if="product.InKorb == true">Im Warenkorb</span>
+				<span class="badge badge-primary badge-pill">{{ product.AnzWarenkorb }}</span>
+				<button class="btn btn-outline-success ml-3" @click=increase(product.Posi)
+					v-if="product.InKorb == false">+</button>
+				<button class="btn btn-outline-danger" @click=decrease(product.Posi)
+					v-if="product.InKorb == false">-</button>
+
+				<span style="color:red"
+					v-if="product.AnzWarenkorb ==  product.Lagerbestand && product.InKorb == false">Nicht mehr auf
+					Lager!</span>
+				<button class="btn btn-outline-success ml-3" v-if="product.AnzWarenkorb > 0 && product.InKorb == false "
+					@click=add_to_cart(product.Posi)>In den Warenkorb</button>
+				<button class="btn btn-outline-danger" v-if="product.InKorb == true"
+					@click=remove_from_cart(product.Posi)>Entfernen</button>
+
+			</li>
+		</ul>
+	</div>
+
+	<script>
+	</script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://unpkg.com/vue"></script>
+	<script src="./main.js"></script>
+</body>
+
+</html>

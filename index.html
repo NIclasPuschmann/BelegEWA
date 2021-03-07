@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+	</script>
+	<script src="https://js.stripe.com/v3/"></script>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>G16_Books - Startseite</title>
+</head>
+
+<body>
+	<div class="header">
+		<nav class="navbar navbar-expand-md navbar-light bg-light">
+			<img id="logo" src="./PP_books_logo.png" alt="bla">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Startseite<span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="./G16-Lagerverwaltung">Lagerverwaltung</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="./Datenadm">Großhändler Shop</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="jumbotron" style="background-image:
+		url(./books-header-1.jpg);"></div>
+	</div>
+
+	<div id="app">
+		<div class="methods"> 
+			<input id="search_bar" class=" mr-sm-2" type="text" placeholder="Suche" v-model="search" aria-label="Suche">
+			<button id="wk-btn" class="btn btn-success ml-3 float-right" onclick="cart_on()" id="cart_but">Warenkorb </button>	
+		</div>
+		<div id="cart_overlay">
+			<div id="cart_area">
+				<button type="button" class="close" aria-label="Close" onclick="cart_off()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h1>Dein Warenkorb</h1>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item" v-for="(product, index) in products" v-if="product.InKorb">
+						<div class="prodtitle">
+							<b>{{ product.Produktitel }}</b>
+						</div>
+						Anzahl im Warenkorb:
+						<span class="badge badge-primary badge-pill">{{ product.AnzWarenkorb }}</span>
+						<div class="prodprice-wk">
+							<b>Preis: {{ product.PreisNetto }} €</b>
+						</div>
+						
+					</li>
+				</ul>
+				<div class="price-tot" v-if="Summe != 0"><b><u> {{ Summe }}€ </u></b></div>
+				<div class="price-tot-tag" v-if="Summe != 0"><b><u>Gesamtsumme:</u></b></div>
+				<button id="checkout-button" class="btn btn-outline-success ml-3" v-if="Summe != 0"
+				onclick="order_items()">Zur Kasse gehen</button>
+
+			</div>
+		</div>
+
+		<ul class="list-group list-group-flush">
+            <li class="list-group-item" v-for="(product, index) in filteredBooks">
+				<div class="singleprod"> 
+					<div class="prodtitle">
+						<b>{{ product.Produktitel }}</b>
+						<button class="btn btn-outline-success ml-3 float-right-pm" @click=increase(product.Posi)
+							v-if="product.InKorb == false && product.AnzWarenkorb==0">Bestellen</button>
+						<button class="btn btn-outline-success ml-3 float-right-pm" @click=increase(product.Posi)
+							v-if="product.AnzWarenkorb>0 ">Menge erhöhen</button>
+						<button class="btn btn-outline-danger float-right-pm" @click=decrease(product.Posi)
+							v-if=" product.AnzWarenkorb>0">Menge veringern</button>
+		
+						<button class="btn btn-outline-danger float-right-pm" v-if="product.InKorb == true"
+							@click=remove_from_cart(product.Posi)>Entfernen</button>
+					</div>
+						<div id="prodauthor">
+							Beschreibung: {{ product.Kurzinhalt }} von
+							{{ product.Autorname }}
+						</div>	
+						<div>
+							Anzahl
+							<span style="color:blue" v-if="product.InKorb == true">Im Warenkorb</span>
+							<span class="badge badge-primary badge-pill">{{ product.AnzWarenkorb }}</span>
+						</div>
+						<div>
+							Bestand
+							<span class="badge badge-primary badge-pill">{{ product.Lagerbestand }}</span>
+						</div>
+					<div id="prodprice">
+						<b>Preis: {{ product.PreisNetto }} €</b>
+					</div>
+
+					<span style="color:red" v-if="product.AnzWarenkorb ==  product.Lagerbestand">Nicht mehr auf Lager!</span>
+				</div>				
+            </li>
+        </ul>
+
+
+	</div>
+
+	<script>
+	</script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://unpkg.com/vue"></script>
+	<script src="./main.js"></script>
+</body>
+
+</html>

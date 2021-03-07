@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bestellung</title>
+</head>
+
+<body>
+    <h1>Bestellung</h1>
+    <form action="https://iws107.informatik.htw-dresden.de/ewa/G16/forms/berechnung.php" method="POST">
+        <label for="offer1">Self-PHP</label>
+        <input id="offer1" onchange="calc()" type="number" name="offer1" min="0" value="0" pattern="[0-9]"><br><br>
+        <label for="offer2">PHP-Referenz</label>
+        <input id="offer2" onchange="calc()" type="number" name="offer2" min="0" value="0" pattern="[0-9]"><br><br>
+        <label for="offer3">PHP-Kochbuch</label>
+        <input id="offer3" onchange="calc()" type="number" name="offer3" min="0" value="0" pattern="[0-9]"><br><br>
+        <p id="sum"></p>
+        <p id="infoShipCost"></p>
+        <p id="maxOrder"></p>
+        <label for="attention">Wie sind Sie auf diese Seite aufmerksam geworden?</label>
+        <select name="attention" id="attention">
+            <option value="stammkunde">Stammkunde</option>
+            <option value="tv_werbung">TV Werbung</option>
+            <option value="telefonbuch">Telefonbuch</option>
+            <option value="mundpropaganda">Mundpropaganda</option>
+        </select><br>
+        <input type="submit" value="Senden">
+    </form>
+
+    <p id="infoShipCost"></p>
+
+    <!-- Fehlerbehandlung-->
+    <p id="demo"></p>
+    <p id="demo1"></p>
+
+    <script>
+        function calc() {
+
+            try {
+                var offer1 = Number(document.getElementById("offer1").value);
+                var offer2 = Number(document.getElementById("offer2").value);
+                var offer3 = Number(document.getElementById("offer3").value);
+
+                var prod1_price = 25.4; //self-php
+                var prod2_price = 18.0; //PHP-referenz
+                var prod3_price = 39.0; //php-kochbuch
+                var prod1_weight = 800; //self-php
+                var prod2_weight = 600; //PHP-referenz
+                var prod3_weight = 1300; //php-kochbuch
+                var tax = 1.05;
+
+                //Preisberechnung
+                var price_brutto = prod1_price * offer1;
+                price_brutto += prod2_price * offer2;
+                price_brutto += prod3_price * offer3;
+
+                //Gewichtsberechnung
+                var comp_weight = prod1_weight * offer1;
+                comp_weight += prod2_weight * offer2;
+                comp_weight += prod3_weight * offer3;
+
+                price_brutto *= tax;
+
+
+                // gewerbliche Bestellungen
+                if (offer1 + offer2 + offer3 > 15) {
+                    document.getElementById("maxOrder").innerHTML = "Gewerbliche Bestellungen sind nicht erlaubt.";
+                }
+
+                //Versandkostenfrei
+                if (price_brutto >= 100) {
+                    price_brutto += 0;
+                    document.getElementById("infoShipCost").innerHTML = "Ab einer Bestellung von 100 EUR entfallen die Versandkosten.";
+
+                } else {
+
+                    //Versandkosten
+                    if (comp_weight >= 0 && comp_weight <= 2000) {
+                        price_brutto += 4.99;
+                    }
+                    if (comp_weight > 2000 && comp_weight <= 5000) {
+                        price_brutto += 5.99;
+                    }
+                    if (comp_weight > 5000 && comp_weight <= 10000) {
+                        price_brutto += 8.99;
+                    }
+                    if (comp_weight > 10000 && comp_weight <= 31000) {
+                        price_brutto += 16.08;
+                    }
+                }
+                document.getElementById("sum").innerHTML = "voraussichtliche Endesumme: " + price_brutto.toFixed(2);
+                
+            } catch (err) {
+                document.getElementById("demo").innerHTML = err.message;
+                document.getElementById("demo1").innerHTML = err.name;
+
+            }
+        }
+    </script>
+
+</body>
+
+</html>
